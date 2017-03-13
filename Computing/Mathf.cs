@@ -61,5 +61,16 @@ namespace Evolution_Simulator.Computing
                     output[i, j] = input0[i, j] + input1[i, j];
             return output;
         }
+        public static double[,] ArrayAverage(double[,] input0, double[,] input1)
+        {
+            if (input0.GetLength(0) != input1.GetLength(0) || input0.GetLength(1) != input1.GetLength(1))
+                throw new InvalidOperationException("The size of two arrays cannot differ");
+            int[] size = { input0.GetLength(0), input0.GetLength(1) };
+            double[,] output = new double[size[0], size[1]];
+            for (int i = 0; i < size[0]; i++)
+                for (int j = 0; j < size[1]; j++)
+                    output[i, j] = (input0[i, j] + input1[i, j]) / 2;
+            return output;
+        }
     }
 }
