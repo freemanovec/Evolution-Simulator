@@ -13,7 +13,19 @@ namespace Evolution_Simulator
     {
         static void Main(string[] args)
         {
-            Map map = new Map(150);
+            Map map = new Map(250);
+            int iterations = 10000;
+            for(int i = 0; i < iterations; i++)
+            {
+                map.Tick();
+                int alive = map.CellsAlive;
+                Console.WriteLine("Epoch #" + i + ", " + alive + " alive");
+                BitmapPlotter plotter = new BitmapPlotter(@"test\year_" + i + ".png");
+                plotter.PlotMap(map);
+                if (alive == 0)
+                    break;
+            }
+            Console.ReadLine();
         }
     }
 }

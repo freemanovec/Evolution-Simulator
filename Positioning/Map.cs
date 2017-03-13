@@ -12,12 +12,48 @@ namespace Evolution_Simulator.Positioning
     class Map
     {
         private readonly Tile[,] _tiles;
+        private readonly int _size;
 
+        /// <summary>
+        /// Orientation - Bottom Left = X: 0; Y: 0
+        /// </summary>
+        /// <param name="sizeSide"></param>
         public Map(int sizeSide)
         {
             _tiles = new Tile[sizeSide, sizeSide];
+            _size = sizeSide;
 
             Generate(sizeSide);
+            Populate(2, 16);
+        }
+
+        public int Size
+        {
+            get
+            {
+                return _size;
+            }
+        }
+        public int CellsAlive
+        {
+            get
+            {
+                int sum = 0;
+                foreach (Tile tile in _tiles)
+                    sum += tile.CellCount;
+                return sum;
+            }
+        }
+        public Tile GetTile(int[] position)
+        {
+            try
+            {
+                return _tiles[position[0], position[1]];
+            }
+            catch
+            {
+                throw new ArgumentOutOfRangeException("Requested Tile is out of range");
+            }
         }
 
         private void Generate(int sizeSide)
@@ -38,7 +74,7 @@ namespace Evolution_Simulator.Positioning
             for(int i = 0; i < sizeSide; i++)
                 for(int j = 0; j < sizeSide; j++)
                 {
-                    _tiles[i, j] = new Tile(noiseTemp[i, j], noiseFood[i, j], noiseBase[i, j]);
+                    _tiles[i, j] = new Tile(this, new int[]{ i, j }, noiseTemp[i, j], noiseFood[i, j], noiseBase[i, j]);
                 }
         }
 
@@ -52,7 +88,7 @@ namespace Evolution_Simulator.Positioning
                 int[] coords = { rand.Next(size[0]), rand.Next(size[1]) };
                 for (int j = 0; j < groupSize; j++)
                 {
-                    Cell cell = new Cell(0.05d, 0.05d);
+                    Cell cell = new Cell(_tiles[coords[0], coords[1]], 0.05d, 0.05d);
                     _tiles[coords[0], coords[1]].AddCell(cell);
                 }
             }

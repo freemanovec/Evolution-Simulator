@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using Evolution_Simulator.Positioning;
 
 namespace Evolution_Simulator.Visualization
 {
@@ -36,6 +37,29 @@ namespace Evolution_Simulator.Visualization
                 bitmap.Save(_path);
             }
             catch(System.Runtime.InteropServices.ExternalException)
+            {
+                return false;
+            }
+            return true;
+        }
+        public bool PlotMap(Map map)
+        {
+            Bitmap bitmap = new Bitmap(map.Size, map.Size);
+            for(int i = 0; i < map.Size; i++)
+                for(int j = 0; j < map.Size; j++)
+                {
+                    Tile tile = map.GetTile(new int[] { i, j });
+                    double food = tile.FoodSupply;
+                    int green = (int)(food * 255);
+                    int red = (tile.CellCount != 0) ? 255 : 0;
+                    int blue = 0;
+                    bitmap.SetPixel(i, j, Color.FromArgb(red, green, blue));
+                }
+            try
+            {
+                bitmap.Save(_path);
+            }
+            catch (System.Runtime.InteropServices.ExternalException)
             {
                 return false;
             }

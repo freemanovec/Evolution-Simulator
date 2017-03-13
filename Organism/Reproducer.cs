@@ -18,7 +18,11 @@ namespace Evolution_Simulator.Organism
 
         public void Reproduce()
         {
-            Logger.Logger.Log("Reproducing");
+            Logger.Logger.Log("Reproducing " + _cell0 + " with " + _cell1);
+            _cell0.DrainEnergyReproduce();
+            _cell1.DrainEnergyReproduce();
+            Cell newCell = new Cell(_cell0.parentTile, _cell0._intelligence, _cell0._strength);
+            _cell0.parentTile.AddCell(newCell);
         }
     }
 }
