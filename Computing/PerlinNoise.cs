@@ -6,68 +6,10 @@ using System.Threading.Tasks;
 
 namespace Evolution_Simulator.Computing
 {
-    static class PerlinNoise
+    class PerlinNoise
     {
-        /*private readonly static byte[] _permutation =
-        {
-            87,239,104,102,186,53,158,17,215,57,64,133,157,230,5,176,192,112,200,214,105,180,69,191,55,124,96,100,224,123,171,4,189,97,170,89,251,196,13,254,88,59,99,164,244,246,115,142,28,219,154,125,66,41,14,208,81,61,206,152,146,221,220,205,185,83,250,140,67,197,80,204,240,101,31,36,150,2,177,137,38,29,108,168,129,8,198,90,68,70,63,98,188,52,161,58,7,222,95,228,203,126,179,111,121,139,34,136,109,162,33,120,130,45,47,44,11,216,20,18,187,85,141,9,46,65,248,30,73,75,118,210,37,60,247,25,127,92,117,233,181,77,114,155,144,156,50,212,91,74,82,107,253,174,23,149,147,134,213,227,151,110,211,199,167,62,22,138,243,207,165,249,255,236,231,24,116,32,145,235,252,182,26,21,48,143,245,131,166,6,54,135,184,217,10,229,190,49,16,1,194,71,39,27,113,238,201,119,76,163,159,173,172,132,3,93,78,202,72,122,84,178,56,148,12,128,51,175,43,15,160,40,193,232,223,226,153,242,234,241,94,42,103,209,195,237,0,218,35,79,225,169,183,86,19,106
-        };
-        private static readonly int[] _p;
 
-        static PerlinNoise()
-        {
-            _p = new int[512];
-            for (int i = 0; i < 512; i++)
-            {
-                _p[i] = _permutation[i % 256];
-            }
-        }
-
-        public static double Noise(double _x, double _y, double _z, int _octaves, double _persistence)
-        {
-            double sum = 0, frequency = 1, amplitude = 1;
-            for(int i = 0; i < _octaves; i++)
-            {
-                sum += NoiseInternal(_x * frequency, _y * frequency, _z * frequency) * amplitude;
-                amplitude *= _persistence;
-                frequency *= 2;
-            }
-            return sum;
-        }
-
-        private static double NoiseInternal(double x, double y, double z)
-        {
-            int xi = (int)x & 255;
-            int yi = (int)y & 255;
-            int zi = (int)z & 255;
-
-            double xf = x - (int)x;
-            double yf = y - (int)y;
-            double zf = z - (int)z;
-
-            double u = Mathf.Fade(xf);
-            double v = Mathf.Fade(yf);
-            double w = Mathf.Fade(zf);
-
-            int a = _p[xi] + yi;
-            int aa = _p[a] + zi;
-            int ab = _p[a + 1] + zi;
-            int b = _p[xi + 1] + yi;
-            int ba = _p[b] + zi;
-            int bb = _p[b + 1] + zi;
-
-            double x1, x2, y1, y2;
-            x1 = Mathf.Lerp(Mathf.Gradient(_p[aa], xf, yf, zf), Mathf.Gradient(_p[ba], xf - 1, yf, zf), u);
-            x2 = Mathf.Lerp(Mathf.Gradient(_p[ab], xf, yf - 1, zf), Mathf.Gradient(_p[bb], xf - 1, yf - 1, zf), u);
-            y1 = Mathf.Lerp(x1, x2, v);
-            x1 = Mathf.Lerp(Mathf.Gradient(_p[aa + 1], xf, yf, zf - 1), Mathf.Gradient(_p[ba + 1], xf - 1, yf, zf - 1), u);
-            x2 = Mathf.Lerp(Mathf.Gradient(_p[ab + 1], xf, yf - 1, zf - 1), Mathf.Gradient(_p[bb + 1], xf - 1, yf - 1, zf - 1), u);
-            y2 = Mathf.Lerp(x1, x2, v);
-
-            return (Mathf.Lerp(y1, y2, w) + 1) / 2;
-        }*/
-
-        private static int[] hash = {
+        private int[] hash = {
         151,160,137, 91, 90, 15,131, 13,201, 95, 96, 53,194,233,  7,225,
         140, 36,103, 30, 69,142,  8, 99, 37,240, 21, 10, 23,190,  6,148,
         247,120,234, 75,  0, 26,197, 62, 94,252,219,203,117, 35, 11, 32,
@@ -102,7 +44,27 @@ namespace Evolution_Simulator.Computing
         184, 84,204,176,115,121, 50, 45,127,  4,150,254,138,236,205, 93,
         222,114, 67, 29, 24, 72,243,141,128,195, 78, 66,215, 61,156,180
         };
-        private static double[][] gradients2D =
+
+        private readonly int _octaves;
+        private readonly double _frequency, _lacunarity, _persistence;
+
+        public PerlinNoise(double frequency, int octaves, double lacunarity, double persistence)
+        {
+            _frequency = frequency;
+            _octaves = octaves;
+            _lacunarity = lacunarity;
+            _persistence = persistence;
+
+            Random rand = new Random();
+            hash = RandomHash(rand);
+        }
+
+        int[] RandomHash(Random rand)
+        {
+            return hash.OrderBy(x => rand.Next()).ToArray();
+        }
+
+        private double[][] gradients2D =
         {
             new double[] {1, 0 },
             new double[] {-1, 0 },
@@ -114,30 +76,45 @@ namespace Evolution_Simulator.Computing
             new double[] {-(1/Mathf.Sqrt2), -(1/Mathf.Sqrt2) }
         };
 
-        public static double Noise(double x, double y, double frequency, int octaves, double lacunarity, double persistence)
+        public double Noise(double x, double y)
         {
+            double frequency = _frequency;
+            int octaves = _octaves;
             double sum = Perlin(x, y, frequency);
             double amplitude = 1d;
             double range = 1d;
             for(int i = 1; i < octaves; i++)
             {
-                frequency *= lacunarity;
-                amplitude *= persistence;
+                frequency *= _lacunarity;
+                amplitude *= _persistence;
                 range += amplitude;
                 sum += Perlin(x, y, frequency) * frequency;
             }
             double befResult = sum / range;
             return befResult > 1 ? 1 : befResult;
         }
-        private static double Dot(double xg, double yg, double x, double y)
+        public double[,] NoiseArray(int size)
+        {
+            return NoiseArray(size, size);
+        }
+        public double[,] NoiseArray(int sizeX, int sizeY)
+        {
+            double[,] noise = new double[sizeX, sizeY];
+            for (int i = 0; i < sizeX; i++)
+                for (int j = 0; j < sizeY; j++)
+                    noise[i, j] = Noise(i, j);
+            return noise;
+        }
+
+        private double Dot(double xg, double yg, double x, double y)
         {
             return xg * x + yg * y;
         }
-        private static double Smooth(double t)
+        private double Smooth(double t)
         {
             return t * t * t * (t * (t * 6d - 15d) + 10d);
         }
-        private static double Perlin(double x, double y, double frequency)
+        private double Perlin(double x, double y, double frequency)
         {
             x *= frequency;
             y *= frequency;

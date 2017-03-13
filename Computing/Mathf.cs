@@ -41,5 +41,25 @@ namespace Evolution_Simulator.Computing
             double magnitude = Math.Sqrt(input.Item1 * input.Item1 + input.Item2 * input.Item2);
             return new Tuple<double, double>(input.Item1 / magnitude, input.Item2 / magnitude);
         }
+        public static double[,] ArrayClamp(double[,] input, double min, double max)
+        {
+            int[] size = { input.GetLength(0), input.GetLength(1) };
+            double[,] output = new double[size[0], size[0]];
+            for(int i = 0; i < size[0]; i++)
+                for(int j = 0; j < size[1]; j++)
+                    output[i, j] = Lerp(min, max, input[i, j]);
+            return output;
+        }
+        public static double[,] ArrayMerge(double[,] input0, double[,] input1)
+        {
+            if(input0.GetLength(0) != input1.GetLength(0) || input0.GetLength(1) != input1.GetLength(1))
+                throw new InvalidOperationException("The size of two arrays cannot differ");
+            int[] size = { input0.GetLength(0), input0.GetLength(1) };
+            double[,] output = new double[size[0], size[1]];
+            for (int i = 0; i < size[0]; i++)
+                for (int j = 0; j < size[1]; j++)
+                    output[i, j] = input0[i, j] + input1[i, j];
+            return output;
+        }
     }
 }
