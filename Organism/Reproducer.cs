@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Evolution_Simulator.Cell
+namespace Evolution_Simulator.Organism
 {
     class Reproducer
     {

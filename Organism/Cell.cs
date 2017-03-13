@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Logger;
 
-namespace Evolution_Simulator.Cell
+namespace Evolution_Simulator.Organism
 {
     class Cell
     {

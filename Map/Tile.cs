@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Evolution_Simulator.Organism;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,12 +11,8 @@ namespace Evolution_Simulator.Map
     {
         private double _temperature;
         public double Temperature { get; set; }
-        private double _moisture;
-        public double Moisture { get; set; }
         private double _foodSupply;
         public double FoodSupply { get; set; }
-        private double _waterSupply;
-        public double WaterSupply { get; set; }
         private double _terrain;
         public double Terrain { get; set; }
         public double Hazardness
@@ -26,14 +23,36 @@ namespace Evolution_Simulator.Map
                 throw new NotImplementedException();
             }
         }
-
-        public Tile(double _temperature, double _moisture, double _foodSupply, double _waterSupply, double _terrain)
+        private List<Cell> _cells = new List<Cell>();
+        private const uint MAX_CELLS = 75;
+        
+        public Tile(double _temperature, double _foodSupply, double _terrain)
         {
             Temperature = _temperature;
-            Moisture = _moisture;
             FoodSupply = _foodSupply;
-            WaterSupply = _waterSupply;
             Terrain = _terrain;
+        }
+
+        public void Tick()
+        {
+            foreach (Cell cell in _cells)
+                cell.Tick();
+        }
+        public bool AddCell(Cell cell)
+        {
+            if (_cells.Count >= MAX_CELLS)
+                return false;
+            if (_cells.Contains(cell))
+                return false;
+            _cells.Add(cell);
+            return true;
+        }
+        public bool RemoveCell(Cell cell)
+        {
+            if (!_cells.Contains(cell))
+                return false;
+            _cells.Remove(cell);
+            return true;
         }
     }
 }
