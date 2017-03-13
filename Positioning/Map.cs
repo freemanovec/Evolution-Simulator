@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Evolution_Simulator.Computing;
 using Evolution_Simulator.Organism;
 
-namespace Evolution_Simulator.Map
+namespace Evolution_Simulator.Positioning
 {
     class Map
     {
@@ -22,7 +22,6 @@ namespace Evolution_Simulator.Map
 
         private void Generate(int sizeSide)
         {
-            
             double[,] noiseBase = new PerlinNoise(.015d, 6, 1.83d, .32d).NoiseArray(sizeSide);
             double[,] noiseTemp = new PerlinNoise(.008d, 3, 1.83d, .32d).NoiseArray(sizeSide);
             double[,] noiseFood = new PerlinNoise(.012d, 3, 1.83d, .32d).NoiseArray(sizeSide);
@@ -45,6 +44,7 @@ namespace Evolution_Simulator.Map
 
         public void Populate(int groups, int groupSize)
         {
+
             Random rand = new Random();
             int[] size = { _tiles.GetLength(0), _tiles.GetLength(1) };
             for(int i = 0; i < groups; i++)

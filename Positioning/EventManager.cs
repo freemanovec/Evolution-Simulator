@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Evolution_Simulator.Map
+namespace Evolution_Simulator.Positioning
 {
     class EventManager
     {
