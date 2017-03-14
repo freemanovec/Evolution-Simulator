@@ -54,7 +54,6 @@
     <Compile Include="Positioning\EventManager.cs" />
     <Compile Include="Positioning\Map.cs" />
     <Compile Include="Positioning\Tile.cs" />
-    <Compile Include="Organism\Reproducer.cs" />
     <Compile Include="Positioning\Vectors.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

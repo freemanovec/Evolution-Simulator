@@ -26,6 +26,7 @@ namespace Evolution_Simulator.Organism
             MAX_FOOD_EATEN_ON_TICK = 0.05d,
             RATIO_FOOD_TO_ENERGY = 50d;
 
+
         private double 
             _energy,
             _iq,
@@ -33,6 +34,18 @@ namespace Evolution_Simulator.Organism
 
         private double
             _capacity_energy;
+
+        public double Energy { get => _energy; set
+            {
+                if ((Energy + value) > EnergyCapacity)
+                    _energy = EnergyCapacity;
+                else
+                    _energy = Energy + value;
+            }
+        }
+        public double EnergyCapacity { get => _capacity_energy; }
+        public double RatioFoodEnergy { get => RATIO_FOOD_TO_ENERGY; }
+        public double MaxFoodEatenOnTick { get => MAX_FOOD_EATEN_ON_TICK; }
 
         private Vector2 _position;
         public Vector2 Position
@@ -52,7 +65,7 @@ namespace Evolution_Simulator.Organism
             _position = position;
         }
 
-        public bool DrainEnergy(double level, bool fatal=false)
+        /*public bool DrainEnergy(double level, bool fatal=false)
         {
             if(_energy >= level || fatal)
             {
@@ -70,7 +83,7 @@ namespace Evolution_Simulator.Organism
             double result = _energy + level;
             _energy = _energy > _capacity_energy ? _capacity_energy : result;
             return true;
-        }
+        }*/
 
         /*private static ulong identificationInternalLast = 0;
         private ulong identificationInternal = identificationInternalLast++;

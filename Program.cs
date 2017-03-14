@@ -22,8 +22,8 @@ namespace Evolution_Simulator
                 map.Tick(manager);
                 int alive = map.CellsAlive;
                 Console.WriteLine("Epoch #" + i + ", " + alive + " alive");
-                BitmapPlotter plotter = new BitmapPlotter(@"test\year_" + i + ".png");
-                plotter.PlotMap(map);
+                /*BitmapPlotter plotter = new BitmapPlotter(@"test\year_" + i + ".png");
+                plotter.PlotMap(map);*/
                 if (alive == 0)
                     break;
             }

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using Evolution_Simulator.Positioning;
+using Evolution_Simulator.Organism;
 
 namespace Evolution_Simulator.Visualization
 {
@@ -48,13 +49,19 @@ namespace Evolution_Simulator.Visualization
             for(int i = 0; i < map.Size; i++)
                 for(int j = 0; j < map.Size; j++)
                 {
-                    Tile tile = map.GetTile(new int[] { i, j });
-                    double food = tile.FoodSupply;
+                    Tile tile = map.GetTile(new Vector2(i, j));
+                    double food = tile.Food;
                     int green = (int)(food * 255);
-                    int red = (tile.CellCount != 0) ? 255 : 0;
+                    //int red = (tile.CellCount != 0) ? 255 : 0;
+                    int red = 0;
                     int blue = 0;
                     bitmap.SetPixel(i, j, Color.FromArgb(red, green, blue));
                 }
+            foreach(Cell cell in map.Cells)
+            {
+                Vector2 position = cell.Position;
+                bitmap.SetPixel((int)position.X, (int)position.Y, Color.Red);
+            }
             try
             {
                 bitmap.Save(_path);

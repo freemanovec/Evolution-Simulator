@@ -56,6 +56,7 @@ namespace Evolution_Simulator.Positioning
                 return _cells.Count;
             }
         }
+        public List<Cell> Cells { get => _cells; }
         public Tile GetTile(Vector2 position)
         {
             try
@@ -165,6 +166,11 @@ namespace Evolution_Simulator.Positioning
         private readonly Cell _cell;
         private readonly List<Cell>[] _surroundingsCells;
 
+        public Tile TileCurrent { get => _tile; }
+        public Tile[] TilesSurrounding { get => _surroundingsTiles; }
+        public Cell CellCurrent { get => _cell; }
+        public List<Cell>[] CellsSurrounding { get => _surroundingsCells; }
+        
         public CellManagerData(Tile tile, Tile[] surroundingsTiles, Cell cell, List<Cell>[] surroundingsCells)
         {
             _tile = tile;
