@@ -7,9 +7,35 @@ using System.Threading.Tasks;
 
 namespace Evolution_Simulator.Positioning
 {
-    class Tile
+    struct Tile
     {
-        public readonly int[] position;
+        private double
+            _height,
+            _temperature,
+            _food;
+        public double Height { get => _height; set => _height = value; }
+        public double Temperature { get => _temperature; set => _temperature = value; }
+        public double Food { get => _food; set => _food = value; }
+
+        public double Hazardness { get
+            {
+                //TODO add function to calculate hazardness
+                throw new NotImplementedException();
+            }
+        }
+
+        private Vector2 _position;
+        public Vector2 Position { get => _position; set => _position = value; }
+
+        public Tile(Vector2 position, double height, double temperature, double food)
+        {
+            _position = position;
+            _height = height;
+            _temperature = temperature;
+            _food = food;
+        }
+
+        /*public readonly int[] position;
         public readonly Map parentMap;
         private double _temperature;
         public double Temperature { get; set; }
@@ -42,43 +68,6 @@ namespace Evolution_Simulator.Positioning
             Temperature = _temperature;
             FoodSupply = _foodSupply;
             Terrain = _terrain;
-        }
-
-        public void Tick()
-        {
-            try
-            {
-                for (int i = 0; i < _cells.Count; i++)
-                    _cells[i].Tick();
-            }catch(IndexOutOfRangeException e)
-            {
-                Logger.Logger.Log("Out of range when trying to iterate over the cells");
-            }
-        }
-        public bool AddCell(Cell cell)
-        {
-            if (_cells.Count >= MAX_CELLS)
-                return false;
-            if (_cells.Contains(cell))
-                return false;
-            _cells.Add(cell);
-            return true;
-        }
-        public bool RemoveCell(Cell cell)
-        {
-            if (!_cells.Contains(cell))
-                return false;
-            _cells.Remove(cell);
-            return true;
-        }
-        public Cell GetMatingCell(Cell caller, double neededEnergy)
-        {
-            for(int i = 0; i < _cells.Count; i++)
-            {
-                if (_cells[i] != caller && _cells[i].HaveEnergy(neededEnergy))
-                    return _cells[i];
-            }
-            return null;
-        }
+        }*/
     }
 }

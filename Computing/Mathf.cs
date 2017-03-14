@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Evolution_Simulator.Positioning;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -36,10 +37,10 @@ namespace Evolution_Simulator.Computing
         {
             return t * t * t * (t * (t * 6 - 15) + 10);
         }
-        public static Tuple<double, double> Normalize(Tuple<double, double> input)
+        public static Vector2 Normalize(Vector2 input)
         {
-            double magnitude = Math.Sqrt(input.Item1 * input.Item1 + input.Item2 * input.Item2);
-            return new Tuple<double, double>(input.Item1 / magnitude, input.Item2 / magnitude);
+            double magnitude = input.Magnitude;
+            return new Vector2(input.X / magnitude, input.Y / magnitude);
         }
         public static double[,] ArrayClamp(double[,] input, double min, double max)
         {

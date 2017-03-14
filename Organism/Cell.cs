@@ -5,12 +5,74 @@ using System.Text;
 using System.Threading.Tasks;
 using Logger;
 using Evolution_Simulator.Positioning;
+using Evolution_Simulator.Computing;
 
 namespace Evolution_Simulator.Organism
 {
-    class Cell
+    struct Cell
     {
-        private static ulong identificationInternalLast = 0;
+        private const double
+            INITIAL_ENERGY = 35d,
+            INITIAL_IQ = 0.05d,
+            INITIAL_STRENGTH = 0.05d,
+
+            INITIAL_CAPACITY_ENERGY = 150d,
+
+            ENERGY_NEEDED_MOVE = 1.5d,
+            ENERGY_NEEDED_EAT = 0.75d,
+            ENERGY_NEEDED_TICK = 0.15d,
+            ENERGY_NEEDED_REPRODUCE = 30d,
+
+            MAX_FOOD_EATEN_ON_TICK = 0.05d,
+            RATIO_FOOD_TO_ENERGY = 50d;
+
+        private double 
+            _energy,
+            _iq,
+            _strength;
+
+        private double
+            _capacity_energy;
+
+        private Vector2 _position;
+        public Vector2 Position
+        {
+            get => _position;
+            set => _position = value;
+        }
+
+        public Cell(Vector2 position)
+        {
+            _energy = INITIAL_ENERGY;
+            _iq = INITIAL_IQ;
+            _strength = INITIAL_STRENGTH;
+
+            _capacity_energy = INITIAL_CAPACITY_ENERGY;
+
+            _position = position;
+        }
+
+        public bool DrainEnergy(double level, bool fatal=false)
+        {
+            if(_energy >= level || fatal)
+            {
+                double result = _energy - level;
+                _energy = result < 0 ? 0 : result;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public bool AddEnergy(double level)
+        {
+            double result = _energy + level;
+            _energy = _energy > _capacity_energy ? _capacity_energy : result;
+            return true;
+        }
+
+        /*private static ulong identificationInternalLast = 0;
         private ulong identificationInternal = identificationInternalLast++;
         private static double InitialEnergy = 35d;
         public double _food = 0, _energy = InitialEnergy, _health = 1d, _intelligence, _strength;
@@ -173,6 +235,6 @@ namespace Evolution_Simulator.Organism
                     directions.Add(positions[3]);
                 return directions.ToArray();
             }
-        }
+        }*/
     }
 }

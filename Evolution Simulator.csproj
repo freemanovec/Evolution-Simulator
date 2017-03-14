@@ -50,10 +50,12 @@
     <Compile Include="Computing\Mathf.cs" />
     <Compile Include="Computing\PerlinNoise.cs" />
     <Compile Include="Computing\Validation.cs" />
+    <Compile Include="Organism\CellManager.cs" />
     <Compile Include="Positioning\EventManager.cs" />
     <Compile Include="Positioning\Map.cs" />
     <Compile Include="Positioning\Tile.cs" />
     <Compile Include="Organism\Reproducer.cs" />
+    <Compile Include="Positioning\Vectors.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Visualization\BitmapPlotter.cs" />

@@ -12,6 +12,7 @@ namespace Evolution_Simulator.Positioning
     class Map
     {
         private readonly Tile[,] _tiles;
+        private readonly List<Cell> _cells = new List<Cell>();
         private readonly int _size;
 
         /// <summary>
@@ -27,6 +28,20 @@ namespace Evolution_Simulator.Positioning
             Populate(2, 16);
         }
 
+        public bool AddCell(Cell cell)
+        {
+            _cells.Add(cell);
+            return true;
+        }
+        public bool RemoveCell(Cell cell)
+        {
+            if (_cells.Contains(cell))
+            {
+                _cells.Remove(cell);
+                return true;
+            }
+            return false;
+        }
         public int Size
         {
             get
@@ -38,17 +53,14 @@ namespace Evolution_Simulator.Positioning
         {
             get
             {
-                int sum = 0;
-                foreach (Tile tile in _tiles)
-                    sum += tile.CellCount;
-                return sum;
+                return _cells.Count;
             }
         }
-        public Tile GetTile(int[] position)
+        public Tile GetTile(Vector2 position)
         {
             try
             {
-                return _tiles[position[0], position[1]];
+                return _tiles[(int)position.X, (int)position.Y];
             }
             catch
             {
@@ -74,32 +86,91 @@ namespace Evolution_Simulator.Positioning
             for(int i = 0; i < sizeSide; i++)
                 for(int j = 0; j < sizeSide; j++)
                 {
-                    _tiles[i, j] = new Tile(this, new int[]{ i, j }, noiseTemp[i, j], noiseFood[i, j], noiseBase[i, j]);
+                    _tiles[i, j] = new Tile(new Vector2(i,j), noiseBase[i, j], noiseTemp[i, j], noiseFood[i, j]);
                 }
         }
 
         public void Populate(int groups, int groupSize)
         {
-
             Random rand = new Random();
             int[] size = { _tiles.GetLength(0), _tiles.GetLength(1) };
             for(int i = 0; i < groups; i++)
             {
-                int[] coords = { rand.Next(size[0]), rand.Next(size[1]) };
+                Vector2 coords = new Vector2(rand.Next(size[0]), rand.Next(size[1]));
                 for (int j = 0; j < groupSize; j++)
                 {
-                    Cell cell = new Cell(_tiles[coords[0], coords[1]], 0.05d, 0.05d);
-                    _tiles[coords[0], coords[1]].AddCell(cell);
+                    Cell cell = new Cell(coords);
+                    AddCell(cell);
                 }
             }
         }
 
-        public void Tick()
+        public void Tick(CellManager manager)
         {
-            Logger.Logger.Log("Ticking Map");
-            foreach (Tile tile in _tiles)
-                tile.Tick();
-            Logger.Logger.Log("Ticking Map done");
+            for(int i = 0; i < CellsAlive; i++)
+            {
+                Cell cell = _cells[i];
+                var surroundings = GetSurroundings(cell);
+                CellManagerData data = new CellManagerData(GetTile(cell.Position), surroundings.Item2, cell, surroundings.Item1);
+                manager.Tick(data);
+            }
+        }
+
+        private Tuple<List<Cell>[], Tile[]> GetSurroundings(Cell cell)
+        {
+            Vector2[] positions =
+            {
+                new Vector2(cell.Position.X-1, cell.Position.Y-1),
+                new Vector2(cell.Position.X, cell.Position.Y-1),
+                new Vector2(cell.Position.X+1, cell.Position.Y-1),
+                new Vector2(cell.Position.X-1, cell.Position.Y),
+                new Vector2(cell.Position.X+1, cell.Position.Y),
+                new Vector2(cell.Position.X-1, cell.Position.Y+1),
+                new Vector2(cell.Position.X, cell.Position.Y+1),
+                new Vector2(cell.Position.X+1, cell.Position.Y+1)
+            };
+            List<Cell>[] cells =
+            {
+                new List<Cell>(),
+                new List<Cell>(),
+                new List<Cell>(),
+                new List<Cell>(),
+                new List<Cell>(),
+                new List<Cell>(),
+                new List<Cell>(),
+                new List<Cell>()
+            };
+            foreach(Cell _cell in _cells)
+            {
+                int indexOf = Array.IndexOf(positions, _cell.Position);
+                if (indexOf != -1)
+                {
+                    cells[indexOf].Add(_cell);
+                }
+            }
+            Tile[] tiles = new Tile[8];
+            for(int i = 0; i < 8; i++)
+            {
+                tiles[i] = GetTile(positions[i]);
+            }
+
+            return new Tuple<List<Cell>[], Tile[]>(cells, tiles);
+        }
+    }
+
+    struct CellManagerData
+    {
+        private readonly Tile _tile;
+        private readonly Tile[] _surroundingsTiles;
+        private readonly Cell _cell;
+        private readonly List<Cell>[] _surroundingsCells;
+
+        public CellManagerData(Tile tile, Tile[] surroundingsTiles, Cell cell, List<Cell>[] surroundingsCells)
+        {
+            _tile = tile;
+            _surroundingsTiles = surroundingsTiles;
+            _cell = cell;
+            _surroundingsCells = surroundingsCells;
         }
     }
 }
