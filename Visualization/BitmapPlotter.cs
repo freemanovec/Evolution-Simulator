@@ -11,11 +11,14 @@ namespace Evolution_Simulator.Visualization
 {
     class BitmapPlotter
     {
-        private string _path;
+        private string _path { get => filename; }
+        //private DebugVisualizer visualizer;
+        public string filename;
 
-        public BitmapPlotter(string filename)
+        public BitmapPlotter()
         {
-            _path = filename;
+            //visualizer = new DebugVisualizer();
+            //visualizer.Show();
         }
         public bool Plot(double[,] array)
         {
@@ -35,6 +38,7 @@ namespace Evolution_Simulator.Visualization
                 }
             try
             {
+                //visualizer.Draw(bitmap);
                 bitmap.Save(_path);
             }
             catch(System.Runtime.InteropServices.ExternalException)
@@ -49,7 +53,7 @@ namespace Evolution_Simulator.Visualization
             for(int i = 0; i < map.Size; i++)
                 for(int j = 0; j < map.Size; j++)
                 {
-                    Tile tile = map.GetTile(new Vector2(i, j));
+                    map.GetTile(out Tile tile, new Vector2(i, j));
                     double food = tile.Food;
                     int green = (int)(food * 255);
                     //int red = (tile.CellCount != 0) ? 255 : 0;
@@ -64,6 +68,7 @@ namespace Evolution_Simulator.Visualization
             }
             try
             {
+                //new Bitmap(bitmap, new Size(bitmap.Width * 80, bitmap.Height * 80)).Save(_path);
                 bitmap.Save(_path);
             }
             catch (System.Runtime.InteropServices.ExternalException)

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace Evolution_Simulator
 {
@@ -14,18 +15,20 @@ namespace Evolution_Simulator
     {
         static void Main(string[] args)
         {
-            Map map = new Map(250);
+            Map map = new Map(64);
+            map.Populate(1, 2);
             CellManager manager = new CellManager();
-            int iterations = 10000;
+            BitmapPlotter plotter = new BitmapPlotter();
+            int iterations = 1500;
             for(int i = 0; i < iterations; i++)
             {
-                map.Tick(manager);
                 int alive = map.CellsAlive;
                 Console.WriteLine("Epoch #" + i + ", " + alive + " alive");
-                /*BitmapPlotter plotter = new BitmapPlotter(@"test\year_" + i + ".png");
-                plotter.PlotMap(map);*/
+                plotter.filename = @"test\year_" + i + ".png";
+                plotter.PlotMap(map);
                 if (alive == 0)
                     break;
+                map.Tick(manager);
             }
             Console.ReadLine();
         }

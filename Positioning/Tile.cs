@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Evolution_Simulator.Positioning
 {
-    struct Tile
+    class Tile
     {
         private double
             _height,
@@ -26,6 +26,8 @@ namespace Evolution_Simulator.Positioning
 
         private Vector2 _position;
         public Vector2 Position { get => _position; set => _position = value; }
+        private List<Cell> _cells = new List<Cell>();
+        public List<Cell> Cells { get => _cells; }
 
         public Tile(Vector2 position, double height, double temperature, double food)
         {
@@ -34,40 +36,5 @@ namespace Evolution_Simulator.Positioning
             _temperature = temperature;
             _food = food;
         }
-
-        /*public readonly int[] position;
-        public readonly Map parentMap;
-        private double _temperature;
-        public double Temperature { get; set; }
-        private double _foodSupply;
-        public double FoodSupply { get; set; }
-        private double _terrain;
-        public double Terrain { get; set; }
-        public double Hazardness
-        {
-            get
-            {
-                //TODO add function to calculate hazardness
-                throw new NotImplementedException();
-            }
-        }
-        private List<Cell> _cells = new List<Cell>();
-        private const uint MAX_CELLS = 75;
-        public int CellCount
-        {
-            get
-            {
-                return _cells.Count;
-            }
-        }
-        
-        public Tile(Map parentMap, int[] position, double _temperature, double _foodSupply, double _terrain)
-        {
-            this.parentMap = parentMap;
-            this.position = position;
-            Temperature = _temperature;
-            FoodSupply = _foodSupply;
-            Terrain = _terrain;
-        }*/
     }
 }

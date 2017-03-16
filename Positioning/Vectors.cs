@@ -52,5 +52,10 @@ namespace Evolution_Simulator.Positioning
             _x = x;
             _y = y;
         }
+
+        public override string ToString()
+        {
+            return "Vector2D(" + X + ", " + Y + ")";
+        }
     }
 }
