@@ -19,7 +19,7 @@ namespace Evolution_Simulator
             map.Populate(1, 2);
             CellManager manager = new CellManager();
             BitmapPlotter plotter = new BitmapPlotter();
-            int iterations = 1500;
+            int iterations = 150000;
             for(int i = 0; i < iterations; i++)
             {
                 int alive = map.CellsAlive;

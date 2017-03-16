@@ -82,6 +82,20 @@ namespace Evolution_Simulator.Organism
         private void Move(CellManagerData data)
         {
             Cell cell = data.CellCurrent;
+            if(!HasEnergy(cell, cell.EnergyNeededToMove).Item1)
+            {
+                return;
+            }
+            Vector2? newPosition = GetBestPosition(data);
+            if (newPosition == null)
+                return;
+
+            Logger.Logger.Log(cell + " Moving from " + cell.Position + " to " + newPosition);
+
+            DrainEnergy(cell, cell.EnergyNeededToMove);
+            data.Map.MoveCell(cell, (Vector2)newPosition);
+
+            /*Cell cell = data.CellCurrent;
             Logger.Logger.Log("Current position of cell to move: " + cell.Position);
             if (!HasEnergy(cell, cell.EnergyNeededToMove).Item1)
             {
@@ -120,7 +134,36 @@ namespace Evolution_Simulator.Organism
             if (!success)
             {
                 Logger.Logger.Log(cell + " Move failed");
+            }*/
+        }
+        private Vector2? GetBestPosition(CellManagerData data)
+        {
+            Vector2? bestPosition = null;
+            double biasBest = -1;
+            double biasMate = 40d;
+            double biasFoodPoint = 55d;
+            for(int i = 0; i < 8; i++)
+            {
+                double biasCurrent = 0;
+                Tile tileInspected = data.TilesSurrounding[i];
+                if (tileInspected == null)
+                    continue;
+                Cell mate = GetMatingCell(data, i);
+                if (mate != null &&
+                    HasEnergy(data.CellCurrent, data.CellCurrent.EnergyNeededToReproduce).Item1 &&
+                    HasEnergy(mate, mate.EnergyNeededToReproduce).Item1)
+                {
+                    biasCurrent += biasMate;
+                }
+                double biasFoodCurrent = tileInspected.Food * biasFoodPoint;
+                biasCurrent += biasFoodCurrent;
+                if(biasCurrent > biasBest)
+                {
+                    biasBest = biasCurrent;
+                    bestPosition = tileInspected.Position;
+                }
             }
+            return bestPosition;
         }
         private Cell GetMatingCell(CellManagerData data, int index=8)
         {
