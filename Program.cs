@@ -15,7 +15,7 @@ namespace Evolution_Simulator
     {
         static void Main(string[] args)
         {
-            Map map = new Map(64);
+            Map map = new Map(512);
             map.Populate(1, 2);
             CellManager manager = new CellManager();
             BitmapPlotter plotter = new BitmapPlotter();

@@ -94,47 +94,6 @@ namespace Evolution_Simulator.Organism
 
             DrainEnergy(cell, cell.EnergyNeededToMove);
             data.Map.MoveCell(cell, (Vector2)newPosition);
-
-            /*Cell cell = data.CellCurrent;
-            Logger.Logger.Log("Current position of cell to move: " + cell.Position);
-            if (!HasEnergy(cell, cell.EnergyNeededToMove).Item1)
-            {
-                Logger.Logger.Log(cell + " Not enough energy to move");
-                return;
-            }
-            Vector2 newPosition;
-            Cell mate = GetMatingCellSurrounding(data);
-            if (mate != null)
-            {
-                Logger.Logger.Log(cell + " Mate found");
-                newPosition = mate.Position;
-            }
-            else
-            {
-                Logger.Logger.Log(cell + " No mate found");
-                Random rand = new Random();
-                Tile tile = null;
-                while (tile == null)
-                {
-                    int index = rand.Next(8);
-                    Logger.Logger.Log(cell + " Trying index " + index);
-                    tile = data.TilesSurrounding[rand.Next(8)];
-                }
-                newPosition = tile.Position;
-            }
-
-            Logger.Logger.Log(cell + " Moving from " + cell.Position + " to " + newPosition);
-
-            DrainEnergy(cell, cell.EnergyNeededToMove);
-            data.Map.GetTile(out Tile checking, newPosition);
-            Logger.Logger.Log("Pre-moving - Length: " + checking.Cells.Count);
-            bool success = data.Map.MoveCell(cell, newPosition);
-            data.Map.GetTile(out checking, newPosition);
-            Logger.Logger.Log("Post-moving - Length: " + checking.Cells.Count);
-            if (!success)
-            {
-                Logger.Logger.Log(cell + " Move failed");
-            }*/
         }
         private Vector2? GetBestPosition(CellManagerData data)
         {
@@ -218,7 +177,6 @@ namespace Evolution_Simulator.Organism
             Logger.Logger.Log(cell + " Draining energy: With: " + level);
             if (HasEnergy(cell, level).Item1)
             {
-                //cell.Energy -= level;
                 double prev = cell.Energy;
                 double fin = prev - level;
                 cell.Energy = fin;
